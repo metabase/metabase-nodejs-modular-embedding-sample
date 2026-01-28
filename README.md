@@ -12,8 +12,8 @@ A minimal sample demonstrating Metabase embedding using **embed.js** with Node.j
 ## Prerequisites
 
 - Node.js 18+
-- Docker and Docker Compose (for running with Metabase)
-- A Metabase Enterprise license (for embedding features)
+- Optionally Docker and Docker Compose (for running with a pre-configured Metabase instance)
+- A Metabase Enterprise license
 
 ## Quick Start
 
@@ -34,13 +34,20 @@ npm run docker:up
 
 3. Open http://localhost:4400 in your browser
 
-### Running locally (development)
+### Running locally with an existing Metabase instance
+
+Before running, ensure your Metabase instance is configured:
+
+- Guest and modular embedding must be enabled in Admin > Embedding settings
+- Static embedding secret key must be set
+- JWT authentication must be enabled with a shared secret
+- A dashboard must be published via the Embed JS editor
 
 1. Copy the environment file:
 
 ```bash
 cp .env.example .env
-# Edit .env with your Metabase instance URL and JWT secret
+# Edit .env with your Metabase instance URL and JWT secrets
 ```
 
 2. Install dependencies and start the server:
@@ -49,8 +56,9 @@ cp .env.example .env
 npm install
 npm start
 ```
+3. On your instance open any dashboard and publish it by going through EmbedJS Wizard => Guest embed setup
 
-3. Open http://localhost:3100 in your browser
+4. Open http://localhost:3100 in your browser
 
 ## Project Structure
 
@@ -77,21 +85,17 @@ const payload = {
   params: {},
   exp: Math.round(Date.now() / 1000) + 10 * 60,
 };
-const token = jwt.sign(payload, METABASE_SECRET_KEY);
+const token = jwt.sign(payload, METABASE_STATIC_EMBEDDING_SECRET);
 ```
 
 ```html
 <!-- Client uses the token -->
-<metabase-dashboard
-  dashboard-id="1"
-  with-title="true"
-></metabase-dashboard>
+<metabase-dashboard token="<signed-token>" with-title="true"></metabase-dashboard>
 
 <script>
   defineMetabaseConfig({
     isGuest: true,
     instanceUrl: "http://localhost:4300",
-    jwtProviderUri: "http://localhost:4400/auth/sso",
   });
 </script>
 ```
@@ -101,15 +105,15 @@ const token = jwt.sign(payload, METABASE_SECRET_KEY);
 SSO embeds authenticate users via JWT, creating a full user session in Metabase. The server returns a JWT containing user information when the embed.js client requests authentication.
 
 ```javascript
-// Server returns user JWT
+// Server returns user JWT at /auth/sso endpoint
 const ssoPayload = {
-  email: "user@example.com",
-  first_name: "Demo",
-  last_name: "User",
-  groups: ["All Users"],
+  email: "rene@example.com",
+  first_name: "Rene",
+  last_name: "Descartes",
+  groups: ["Customer"],
   exp: Math.round(Date.now() / 1000) + 10 * 60,
 };
-const ssoToken = jwt.sign(ssoPayload, METABASE_SECRET_KEY);
+const ssoToken = jwt.sign(ssoPayload, METABASE_JWT_SHARED_SECRET);
 res.json({ jwt: ssoToken });
 ```
 
@@ -134,7 +138,8 @@ res.json({ jwt: ssoToken });
 |----------|-------------|---------|
 | `PORT` | Server port | `3100` |
 | `METABASE_INSTANCE_URL` | Metabase URL | `http://localhost:3000` |
-| `METABASE_JWT_SHARED_SECRET` | JWT signing secret | - |
+| `METABASE_JWT_SHARED_SECRET` | JWT signing secret for SSO authentication | - |
+| `METABASE_STATIC_EMBEDDING_SECRET` | JWT signing secret for guest embeds | - |
 | `PREMIUM_EMBEDDING_TOKEN` | Metabase Enterprise license | - |
 
 ## Running E2E Tests
@@ -151,4 +156,4 @@ npm run cypress:run
 
 ## License
 
-MIT
+This project is licensed under the MIT license. See the [LICENSE](./LICENSE) file for more info.
