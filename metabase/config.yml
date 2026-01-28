@@ -1,0 +1,16 @@
+version: 1
+config:
+  users:
+    - first_name: Rene
+      last_name: Descartes
+      password: foobarbaz
+      email: rene@example.com
+  api-keys:
+    - name: main
+      key: "mb_NgLv2g7CFm1VDIhfensgdMhLPYvvKIz3cNxrW99/Cro="
+      group: admin
+      creator: rene@example.com
+  settings:
+    enable-embedding-simple: true
+    enable-embedding-static: true
+    jwt-enabled: true

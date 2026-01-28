@@ -1,0 +1,19 @@
+{
+  "name": "metabase-nodejs-embed-js-embedding-sample",
+  "version": "1.0.0",
+  "description": "Minimal Node.js + Express sample for Metabase embed.js embedding",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "docker:up": "docker compose --env-file .env.docker up",
+    "docker:e2e:up": "yarn docker:up",
+    "docker:local-dist:up": "docker compose -f docker-compose.yml -f docker-compose.local-dist.yml --env-file .env.docker up",
+    "docker:down": "docker compose --env-file .env.docker down",
+    "docker:rm": "yarn docker:down --rmi all --volumes"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "license": "MIT"
+}
