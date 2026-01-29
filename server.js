@@ -1,15 +1,24 @@
 import express from "express";
+import cors from "cors";
 import jwt from "jsonwebtoken";
 
 const app = express();
 const port = process.env.PORT;
+
+app.use(cors({ credentials: true, origin: true }));
 
 const METABASE_JWT_SHARED_SECRET = process.env.METABASE_JWT_SHARED_SECRET;
 const METABASE_STATIC_EMBEDDING_SECRET =
   process.env.METABASE_STATIC_EMBEDDING_SECRET;
 
 const METABASE_SITE_URL = process.env.METABASE_INSTANCE_URL;
-const DASHBOARD_ID_TO_EMBED = process.env.DASHBOARD_ID_TO_EMBED || 1;
+const METABASE_DASHBOARD_ID_TO_EMBED = process.env.METABASE_DASHBOARD_ID_TO_EMBED
+  ? parseInt(process.env.METABASE_DASHBOARD_ID_TO_EMBED)
+  : 1;
+
+const METABASE_ADMIN_EMAIL = process.env.METABASE_ADMIN_EMAIL || "rene@example.com";
+const METABASE_ADMIN_FIRST_NAME = process.env.METABASE_ADMIN_FIRST_NAME || "Rene";
+const METABASE_ADMIN_LAST_NAME = process.env.METABASE_ADMIN_LAST_NAME || "Descartes";
 
 const JWT_PROVIDER_URI = `http://localhost:${port}/auth/sso`;
 
@@ -59,11 +68,18 @@ app.get("/auth/sso", (req, res) => {
   // Example:
   // const { user } = req.session;
   const user = {
-    email: "rene@example.com",
-    firstName: "Rene",
-    lastName: "Descartes",
-    group: "Customer",
+    email: METABASE_ADMIN_EMAIL,
+    firstName: METABASE_ADMIN_FIRST_NAME,
+    lastName: METABASE_ADMIN_LAST_NAME,
+    group: 'Customer',
   };
+
+  if (!user) {
+    return res.status(401).json({
+      status: "error",
+      message: "Not authenticated",
+    });
+  }
 
   const ssoPayload = {
     email: user.email,
@@ -74,12 +90,6 @@ app.get("/auth/sso", (req, res) => {
   };
 
   const ssoToken = jwt.sign(ssoPayload, METABASE_JWT_SHARED_SECRET);
-  const origin = req.headers.origin || "*";
-
-  res.set({
-    "Access-Control-Allow-Origin": origin,
-    "Access-Control-Allow-Credentials": "true",
-  });
 
   res.json({ jwt: ssoToken });
 });
@@ -87,7 +97,7 @@ app.get("/auth/sso", (req, res) => {
 // Guest Embed - uses signed JWT tokens for anonymous access
 app.get(["/", "/guest-embed"], (req, res) => {
   const payload = {
-    resource: { dashboard: DASHBOARD_ID_TO_EMBED },
+    resource: { dashboard: METABASE_DASHBOARD_ID_TO_EMBED },
     params: {},
     exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minutes
   };
@@ -111,7 +121,7 @@ app.get("/sso-embed", (req, res) => {
         jwtProviderUri: JWT_PROVIDER_URI,
         enableInternalNavigation: true,
       },
-      `<metabase-dashboard dashboard-id="${DASHBOARD_ID_TO_EMBED}" with-title="true" with-downloads="false"></metabase-dashboard>`,
+      `<metabase-dashboard dashboard-id="${METABASE_DASHBOARD_ID_TO_EMBED}" with-title="true" with-downloads="false"></metabase-dashboard>`,
       "/sso-embed",
     ),
   );

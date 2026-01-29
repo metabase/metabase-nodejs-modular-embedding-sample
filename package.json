@@ -12,6 +12,7 @@
     "docker:rm": "yarn docker:down --rmi all --volumes"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "env-cmd": "^10.1.0",
     "express": "^4.21.0",
     "jsonwebtoken": "^9.0.2"

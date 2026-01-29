@@ -134,7 +134,7 @@ res.json({ jwt: ssoToken });
 | `METABASE_INSTANCE_URL` | Metabase URL | `http://localhost:3000` |
 | `METABASE_JWT_SHARED_SECRET` | JWT signing secret for SSO authentication | - |
 | `METABASE_STATIC_EMBEDDING_SECRET` | JWT signing secret for guest embeds | - |
-| `DASHBOARD_ID_TO_EMBED` | ID of the dashboard to embed | `1` |
+| `METABASE_DASHBOARD_ID_TO_EMBED` | ID of the dashboard to embed | `1` |
 | `PREMIUM_EMBEDDING_TOKEN` | Metabase Enterprise license | - |
 
 ## Running E2E Tests
