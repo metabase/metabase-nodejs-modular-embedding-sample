@@ -36,18 +36,13 @@ npm run docker:up
 
 ### Running locally with an existing Metabase instance
 
-Before running, ensure your Metabase instance is configured:
-
-- Guest and modular embedding must be enabled in Admin > Embedding settings
-- Static embedding secret key must be set
-- JWT authentication must be enabled with a shared secret
-- A dashboard must be published via the Embed JS editor
+Before running, ensure your Metabase instance is configured following the [guest embedding setup guide](https://www.metabase.com/docs/latest/embedding/guest-embedding) and [SSO authentication guide](https://www.metabase.com/docs/latest/embedding/authentication).
 
 1. Copy the environment file:
 
 ```bash
 cp .env.example .env
-# Edit .env with your Metabase instance URL and JWT secrets
+# Edit .env with your Metabase instance URL, JWT secrets, and dashboard ID
 ```
 
 2. Install dependencies and start the server:
@@ -56,9 +51,8 @@ cp .env.example .env
 npm install
 npm start
 ```
-3. On your instance open any dashboard and publish it by going through EmbedJS Wizard => Guest embed setup
 
-4. Open http://localhost:3100 in your browser
+3. Open http://localhost:3100 in your browser
 
 ## Project Structure
 
@@ -76,7 +70,7 @@ npm start
 
 ### Guest Embed (Signed JWT)
 
-Guest embeds use signed JWT tokens to provide anonymous access to specific dashboards or questions. The server signs a token containing the resource ID and parameters, which is then passed to the `<metabase-dashboard>` component.
+Guest embeds use signed JWT tokens to provide anonymous access to specific dashboards or questions. The server signs a token containing the resource ID and parameters, which is then passed to the `<metabase-dashboard>` component. See the [guest embedding docs](https://www.metabase.com/docs/latest/embedding/guest-embedding) for more details.
 
 ```javascript
 // Server generates a signed token
@@ -102,7 +96,7 @@ const token = jwt.sign(payload, METABASE_STATIC_EMBEDDING_SECRET);
 
 ### SSO Embed (JWT Authentication)
 
-SSO embeds authenticate users via JWT, creating a full user session in Metabase. The server returns a JWT containing user information when the embed.js client requests authentication.
+SSO embeds authenticate users via JWT, creating a full user session in Metabase. The server returns a JWT containing user information when the embed.js client requests authentication. See the [authentication docs](https://www.metabase.com/docs/latest/embedding/authentication) for more details.
 
 ```javascript
 // Server returns user JWT at /auth/sso endpoint
@@ -140,6 +134,7 @@ res.json({ jwt: ssoToken });
 | `METABASE_INSTANCE_URL` | Metabase URL | `http://localhost:3000` |
 | `METABASE_JWT_SHARED_SECRET` | JWT signing secret for SSO authentication | - |
 | `METABASE_STATIC_EMBEDDING_SECRET` | JWT signing secret for guest embeds | - |
+| `METABASE_DASHBOARD_ID_TO_EMBED` | ID of the dashboard to embed | `1` |
 | `PREMIUM_EMBEDDING_TOKEN` | Metabase Enterprise license | - |
 
 ## Running E2E Tests

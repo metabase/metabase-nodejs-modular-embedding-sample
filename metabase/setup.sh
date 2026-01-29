@@ -1,19 +1,34 @@
 #!/bin/bash
 set -e
 
-METABASE_INSTANCE_URL="${METABASE_INSTANCE_URL}"
-METABASE_ADMIN_API_KEY="${METABASE_ADMIN_API_KEY}"
-
 echo "Waiting for Metabase to be ready..."
 until curl -sf "${METABASE_INSTANCE_URL}/api/health" > /dev/null 2>&1; do
   sleep 2
 done
 echo "Metabase is ready!"
 
-echo "Enabling static embedding for dashboard 1..."
-curl -sf -X PUT "${METABASE_INSTANCE_URL}/api/dashboard/1" \
+echo "Getting session token..."
+SESSION_RESPONSE=$(curl -s -X POST \
   -H "Content-Type: application/json" \
-  -H "X-Api-Key: ${METABASE_ADMIN_API_KEY}" \
-  -d '{"enable_embedding": true}'
+  -d "{\"username\": \"${METABASE_ADMIN_EMAIL}\", \"password\": \"${METABASE_ADMIN_PASSWORD}\"}" \
+  "${METABASE_INSTANCE_URL}/api/session")
 
-echo "Static embedding enabled for dashboard 1!"
+SESSION_ID=$(echo "$SESSION_RESPONSE" | sed -n 's/.*"id":"\([^"]*\)".*/\1/p')
+
+if [ -z "$SESSION_ID" ]; then
+  echo "Failed to get session token. Response: $SESSION_RESPONSE"
+  exit 1
+fi
+
+echo "Enabling static embedding for dashboard ${METABASE_DASHBOARD_ID_TO_EMBED}..."
+RESPONSE=$(curl -s -X PUT "${METABASE_INSTANCE_URL}/api/dashboard/${METABASE_DASHBOARD_ID_TO_EMBED}" \
+  -H "Content-Type: application/json" \
+  -H "X-Metabase-Session: ${SESSION_ID}" \
+  -d '{"enable_embedding": true}')
+
+if echo "$RESPONSE" | grep -q '"error"'; then
+  echo "Failed to enable embedding. Response: $RESPONSE"
+  exit 1
+fi
+
+echo "Static embedding enabled for dashboard ${METABASE_DASHBOARD_ID_TO_EMBED}!"
