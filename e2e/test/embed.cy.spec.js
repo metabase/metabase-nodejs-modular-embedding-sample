@@ -1,6 +1,6 @@
 const TIMEOUT_MS = 20000;
 
-describe("Embed.js: metabase-nodejs-embed-js-embedding-sample compatibility", () => {
+describe("Embed.js: metabase-nodejs-modular-embedding-sample compatibility", () => {
   it("should load the guest embed page", () => {
     cy.visit("/");
 

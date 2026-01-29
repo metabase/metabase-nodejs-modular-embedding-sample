@@ -1,7 +1,8 @@
 {
-  "name": "metabase-nodejs-embed-js-embedding-sample",
+  "name": "metabase-nodejs-modular-embedding-sample",
   "version": "1.0.0",
   "description": "Minimal Node.js + Express sample for Metabase embed.js embedding",
+  "private": true,
   "type": "module",
   "scripts": {
     "start": "env-cmd -f .env node server.js",

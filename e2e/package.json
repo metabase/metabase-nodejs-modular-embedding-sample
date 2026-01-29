@@ -1,7 +1,7 @@
 {
   "name": "e2e",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "devDependencies": {
     "@testing-library/cypress": "^10.0.3",
     "cypress": "^14.0.3",
