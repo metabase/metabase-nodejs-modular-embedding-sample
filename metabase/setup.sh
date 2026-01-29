@@ -14,6 +14,6 @@ echo "Enabling static embedding for dashboard 1..."
 curl -sf -X PUT "${METABASE_INSTANCE_URL}/api/dashboard/1" \
   -H "Content-Type: application/json" \
   -H "X-Api-Key: ${METABASE_ADMIN_API_KEY}" \
-  -d '{"enable_embedding": true}'
+  -d '{"enable_embedding": true}' > /dev/null
 
 echo "Static embedding enabled for dashboard 1!"

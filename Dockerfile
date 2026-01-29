@@ -7,4 +7,4 @@ COPY server.js ./
 
 RUN npm ci
 
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]
