@@ -31,6 +31,7 @@ services:
     environment:
       METABASE_INSTANCE_URL: "http://metabase:${MB_PORT}"
       METABASE_ADMIN_API_KEY: "${METABASE_ADMIN_API_KEY}"
+      DASHBOARD_ID_TO_EMBED: "${DASHBOARD_ID_TO_EMBED}"
     volumes:
       - ./metabase/setup.sh:/setup.sh:ro
     entrypoint: ["/bin/sh", "/setup.sh"]
@@ -49,6 +50,7 @@ services:
       METABASE_INSTANCE_URL: "http://localhost:${MB_PORT}"
       METABASE_JWT_SHARED_SECRET: "${METABASE_JWT_SHARED_SECRET}"
       METABASE_STATIC_EMBEDDING_SECRET: "${METABASE_STATIC_EMBEDDING_SECRET}"
+      DASHBOARD_ID_TO_EMBED: "${DASHBOARD_ID_TO_EMBED}"
     healthcheck:
       test: curl --fail -X GET -I "http://localhost:${SERVER_PORT}/" || exit 1
       interval: 2s

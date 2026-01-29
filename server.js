@@ -8,8 +8,8 @@ const METABASE_JWT_SHARED_SECRET = process.env.METABASE_JWT_SHARED_SECRET;
 const METABASE_STATIC_EMBEDDING_SECRET =
   process.env.METABASE_STATIC_EMBEDDING_SECRET;
 
-const METABASE_SITE_URL =
-  process.env.METABASE_INSTANCE_URL;
+const METABASE_SITE_URL = process.env.METABASE_INSTANCE_URL;
+const DASHBOARD_ID_TO_EMBED = process.env.DASHBOARD_ID_TO_EMBED || 1;
 
 const JWT_PROVIDER_URI = `http://localhost:${port}/auth/sso`;
 
@@ -87,7 +87,7 @@ app.get("/auth/sso", (req, res) => {
 // Guest Embed - uses signed JWT tokens for anonymous access
 app.get(["/", "/guest-embed"], (req, res) => {
   const payload = {
-    resource: { dashboard: 1 },
+    resource: { dashboard: DASHBOARD_ID_TO_EMBED },
     params: {},
     exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minutes
   };
@@ -111,7 +111,7 @@ app.get("/sso-embed", (req, res) => {
         jwtProviderUri: JWT_PROVIDER_URI,
         enableInternalNavigation: true,
       },
-      `<metabase-dashboard dashboard-id="1" with-title="true" with-downloads="false"></metabase-dashboard>`,
+      `<metabase-dashboard dashboard-id="${DASHBOARD_ID_TO_EMBED}" with-title="true" with-downloads="false"></metabase-dashboard>`,
       "/sso-embed",
     ),
   );
