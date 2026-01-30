@@ -7,18 +7,17 @@ const port = process.env.PORT;
 
 app.use(cors({ credentials: true, origin: true }));
 
-const METABASE_JWT_SHARED_SECRET = process.env.METABASE_JWT_SHARED_SECRET;
-const METABASE_STATIC_EMBEDDING_SECRET =
-  process.env.METABASE_STATIC_EMBEDDING_SECRET;
+const MB_JWT_SHARED_SECRET = process.env.MB_JWT_SHARED_SECRET;
+const MB_EMBEDDING_SECRET_KEY = process.env.MB_EMBEDDING_SECRET_KEY;
 
-const METABASE_SITE_URL = process.env.METABASE_INSTANCE_URL;
-const METABASE_DASHBOARD_ID_TO_EMBED = process.env.METABASE_DASHBOARD_ID_TO_EMBED
-  ? parseInt(process.env.METABASE_DASHBOARD_ID_TO_EMBED)
+const MB_SITE_URL = process.env.MB_INSTANCE_URL;
+const MB_DASHBOARD_ID_TO_EMBED = process.env.MB_DASHBOARD_ID_TO_EMBED
+  ? parseInt(process.env.MB_DASHBOARD_ID_TO_EMBED)
   : 1;
 
-const METABASE_ADMIN_EMAIL = process.env.METABASE_ADMIN_EMAIL || "rene@example.com";
-const METABASE_ADMIN_FIRST_NAME = process.env.METABASE_ADMIN_FIRST_NAME || "Rene";
-const METABASE_ADMIN_LAST_NAME = process.env.METABASE_ADMIN_LAST_NAME || "Descartes";
+const MB_ADMIN_EMAIL = process.env.MB_ADMIN_EMAIL || "rene@example.com";
+const MB_ADMIN_FIRST_NAME = process.env.MB_ADMIN_FIRST_NAME || "Rene";
+const MB_ADMIN_LAST_NAME = process.env.MB_ADMIN_LAST_NAME || "Descartes";
 
 const JWT_PROVIDER_URI = `http://localhost:${port}/auth/sso`;
 
@@ -48,7 +47,7 @@ const getPageLayout = (config, component, currentPath) => {
           };
           defineMetabaseConfig(${JSON.stringify(config)});
         </script>
-        <script defer src="${METABASE_SITE_URL}/app/embed.js"></script>
+        <script defer src="${MB_SITE_URL}/app/embed.js"></script>
         <nav>
           ${navLink("/", "Guest Embed")}
           ${navLink("/sso-embed", "SSO Embed")}
@@ -68,10 +67,10 @@ app.get("/auth/sso", (req, res) => {
   // Example:
   // const { user } = req.session;
   const user = {
-    email: METABASE_ADMIN_EMAIL,
-    firstName: METABASE_ADMIN_FIRST_NAME,
-    lastName: METABASE_ADMIN_LAST_NAME,
-    group: 'Customer',
+    email: MB_ADMIN_EMAIL,
+    firstName: MB_ADMIN_FIRST_NAME,
+    lastName: MB_ADMIN_LAST_NAME,
+    group: "Customer",
   };
 
   if (!user) {
@@ -89,7 +88,7 @@ app.get("/auth/sso", (req, res) => {
     exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minutes
   };
 
-  const ssoToken = jwt.sign(ssoPayload, METABASE_JWT_SHARED_SECRET);
+  const ssoToken = jwt.sign(ssoPayload, MB_JWT_SHARED_SECRET);
 
   res.json({ jwt: ssoToken });
 });
@@ -97,15 +96,15 @@ app.get("/auth/sso", (req, res) => {
 // Guest Embed - uses signed JWT tokens for anonymous access
 app.get(["/", "/guest-embed"], (req, res) => {
   const payload = {
-    resource: { dashboard: METABASE_DASHBOARD_ID_TO_EMBED },
+    resource: { dashboard: MB_DASHBOARD_ID_TO_EMBED },
     params: {},
     exp: Math.round(Date.now() / 1000) + 10 * 60, // 10 minutes
   };
-  const token = jwt.sign(payload, METABASE_STATIC_EMBEDDING_SECRET);
+  const token = jwt.sign(payload, MB_EMBEDDING_SECRET_KEY);
 
   res.send(
     getPageLayout(
-      { isGuest: true, instanceUrl: METABASE_SITE_URL },
+      { isGuest: true, instanceUrl: MB_SITE_URL },
       `<metabase-dashboard token="${token}" with-title="true"></metabase-dashboard>`,
       "/",
     ),
@@ -117,11 +116,11 @@ app.get("/sso-embed", (req, res) => {
   res.send(
     getPageLayout(
       {
-        instanceUrl: METABASE_SITE_URL,
+        instanceUrl: MB_SITE_URL,
         jwtProviderUri: JWT_PROVIDER_URI,
         enableInternalNavigation: true,
       },
-      `<metabase-dashboard dashboard-id="${METABASE_DASHBOARD_ID_TO_EMBED}" with-title="true" with-downloads="false"></metabase-dashboard>`,
+      `<metabase-dashboard dashboard-id="${MB_DASHBOARD_ID_TO_EMBED}" with-title="true" with-downloads="false"></metabase-dashboard>`,
       "/sso-embed",
     ),
   );

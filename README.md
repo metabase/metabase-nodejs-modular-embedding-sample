@@ -23,7 +23,7 @@ A minimal sample demonstrating Metabase embedding using **embed.js** with Node.j
 
 ```bash
 cp .env.docker.example .env.docker
-# Edit .env.docker and add your PREMIUM_EMBEDDING_TOKEN
+# Edit .env.docker and add your MB_PREMIUM_EMBEDDING_TOKEN
 ```
 
 2. Start the containers:
@@ -79,7 +79,7 @@ const payload = {
   params: {},
   exp: Math.round(Date.now() / 1000) + 10 * 60,
 };
-const token = jwt.sign(payload, METABASE_STATIC_EMBEDDING_SECRET);
+const token = jwt.sign(payload, MB_EMBEDDING_SECRET_KEY);
 ```
 
 ```html
@@ -107,7 +107,7 @@ const ssoPayload = {
   groups: ["Customer"],
   exp: Math.round(Date.now() / 1000) + 10 * 60,
 };
-const ssoToken = jwt.sign(ssoPayload, METABASE_JWT_SHARED_SECRET);
+const ssoToken = jwt.sign(ssoPayload, MB_JWT_SHARED_SECRET);
 res.json({ jwt: ssoToken });
 ```
 
@@ -131,11 +131,11 @@ res.json({ jwt: ssoToken });
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PORT` | Server port | `3100` |
-| `METABASE_INSTANCE_URL` | Metabase URL | `http://localhost:3000` |
-| `METABASE_JWT_SHARED_SECRET` | JWT signing secret for SSO authentication | - |
-| `METABASE_STATIC_EMBEDDING_SECRET` | JWT signing secret for guest embeds | - |
-| `METABASE_DASHBOARD_ID_TO_EMBED` | ID of the dashboard to embed | `1` |
-| `PREMIUM_EMBEDDING_TOKEN` | Metabase Enterprise license | - |
+| `MB_INSTANCE_URL` | Metabase URL | `http://localhost:3000` |
+| `MB_JWT_SHARED_SECRET` | JWT signing secret for SSO authentication | - |
+| `MB_EMBEDDING_SECRET_KEY` | JWT signing secret for guest embeds | - |
+| `MB_DASHBOARD_ID_TO_EMBED` | ID of the dashboard to embed | `1` |
+| `MB_PREMIUM_EMBEDDING_TOKEN` | Metabase Enterprise license | - |
 
 ## Running E2E Tests
 
