@@ -1,10 +1,10 @@
 version: 1
 config:
   users:
-    - first_name: "{{ env METABASE_ADMIN_FIRST_NAME }}"
-      last_name: "{{ env METABASE_ADMIN_LAST_NAME }}"
-      password: "{{ env METABASE_ADMIN_PASSWORD }}"
-      email: "{{ env METABASE_ADMIN_EMAIL }}"
+    - first_name: "{{ env MB_ADMIN_FIRST_NAME }}"
+      last_name: "{{ env MB_ADMIN_LAST_NAME }}"
+      password: "{{ env MB_ADMIN_PASSWORD }}"
+      email: "{{ env MB_ADMIN_EMAIL }}"
   settings:
     enable-embedding-simple: true
     enable-embedding-static: true
