@@ -34,8 +34,9 @@ const getPageLayout = (config, component, currentPath) => {
           html, body { height: 100%; margin: 0; overflow: hidden; }
           body { display: flex; flex-direction: column; }
           nav { padding: 1rem; background: #f0f0f0; }
-          nav a { margin-right: 1rem; }
-          nav a.active { font-weight: bold; }
+          nav a { margin-right: 1rem; text-decoration: none; color: #555; padding: 0.25rem 0.5rem; border-radius: 4px; }
+          nav a:hover { background: #e0e0e0; }
+          nav a.active { font-weight: bold; background: #509EE3; color: white; }
           main { flex: 1; }
           metabase-dashboard { width: 100%; height: 100%; }
         </style>
