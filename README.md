@@ -36,7 +36,7 @@ npm run docker:up
 
 ### Running locally with an existing Metabase instance
 
-Before running, ensure your Metabase instance is configured following the [guest embedding setup guide](https://www.metabase.com/docs/latest/embedding/guest-embedding) and [SSO authentication guide](https://www.metabase.com/docs/latest/embedding/authentication).
+Before running, ensure your Metabase instance is configured following the [guest embedding setup guide](https://www.metabase.com/docs/latest/embedding/guest-embedding) and [SSO authentication guide](https://www.metabase.com/docs/latest/embedding/authentication). You can leave the [JWT Identity Provider](https://www.metabase.com/docs/latest/people-and-groups/authenticating-with-jwt#set-up-jwt-authentication) URI blank or set it to `http://localhost:3100/auth/sso`.
 
 1. Copy the environment file:
 
@@ -89,7 +89,7 @@ const token = jwt.sign(payload, MB_EMBEDDING_SECRET_KEY);
 <script>
   defineMetabaseConfig({
     isGuest: true,
-    instanceUrl: "http://localhost:4300",
+    instanceUrl: "http://localhost:3000",
   });
 </script>
 ```
@@ -120,8 +120,8 @@ res.json({ jwt: ssoToken });
 
 <script>
   defineMetabaseConfig({
-    instanceUrl: "http://localhost:4300",
-    jwtProviderUri: "http://localhost:4400/auth/sso",
+    instanceUrl: "http://localhost:3000",
+    jwtProviderUri: "http://localhost:3100/auth/sso",
   });
 </script>
 ```
