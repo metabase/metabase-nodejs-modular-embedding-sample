@@ -89,14 +89,14 @@ const token = jwt.sign(payload, MB_EMBEDDING_SECRET_KEY);
 <script>
   defineMetabaseConfig({
     isGuest: true,
-    instanceUrl: "http://localhost:4300",
+    instanceUrl: "http://localhost:3000",
   });
 </script>
 ```
 
 ### SSO Embed (JWT Authentication)
 
-SSO embeds authenticate users via JWT, creating a full user session in Metabase. The server returns a JWT containing user information when the embed.js client requests authentication. See the [authentication docs](https://www.metabase.com/docs/latest/embedding/authentication) for more details.
+SSO embeds authenticate users via JWT, creating a full user session in Metabase. The server returns a JWT containing user information when the embed.js client requests authentication. See the [authentication docs](https://www.metabase.com/docs/latest/embedding/authentication) for more details. This method enables end users to drill-through on charts, build their own visualizations, and ask questions to Metabase’s AI service. See a complete list of differences between SSO and guest embeds [in this doc](https://www.metabase.com/docs/latest/embedding/introduction#comparison-of-embedding-types).
 
 ```javascript
 // Server returns user JWT at /auth/sso endpoint
@@ -120,8 +120,8 @@ res.json({ jwt: ssoToken });
 
 <script>
   defineMetabaseConfig({
-    instanceUrl: "http://localhost:4300",
-    jwtProviderUri: "http://localhost:4400/auth/sso",
+    instanceUrl: "http://localhost:3000",
+    jwtProviderUri: "http://localhost:3100/auth/sso",
   });
 </script>
 ```
