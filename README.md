@@ -36,7 +36,7 @@ npm run docker:up
 
 ### Running locally with an existing Metabase instance
 
-Before running, ensure your Metabase instance is configured following the [guest embedding setup guide](https://www.metabase.com/docs/latest/embedding/guest-embedding) and [SSO authentication guide](https://www.metabase.com/docs/latest/embedding/authentication). You can leave the [JWT Identity Provider](https://www.metabase.com/docs/latest/people-and-groups/authenticating-with-jwt#set-up-jwt-authentication) URI blank or set it to `http://localhost:3100/auth/sso`.
+Before running, ensure your Metabase instance is configured following the [guest embedding setup guide](https://www.metabase.com/docs/latest/embedding/guest-embedding) and [SSO authentication guide](https://www.metabase.com/docs/latest/embedding/authentication).
 
 1. Copy the environment file:
 
